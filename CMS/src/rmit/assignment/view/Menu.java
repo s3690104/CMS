@@ -10,6 +10,18 @@ public class Menu {
 		System.out.println("=\t4. Display the course figures\t\t\t=");
 		System.out.println("=\t5. Quit\t\t\t\t\t\t=");
 		System.out.println("=========================================================");
+		displayOptionMsg();
+	}
+	
+	public static void displayCourseName() {
+		System.out.println("=\t1. Italian Cooking\t\t\t\t=");
+		System.out.println("=\t2. Seafood Cooking\t\t\t\t=");
+		System.out.println("=\t3. Sewing\t\t\t\t\t=");
+		System.out.println("=\t4. Creative Writing\t\t\t\t=");
+		System.out.println("=\t5. Business Cooking\t\t\t\t=");
+		System.out.println("=\t6. Back to main menu\t\t\t\t=");
+		System.out.println("=========================================================");
+		displayOptionMsg();
 	}
 	
 	public static void displayOptionMsg() {
@@ -25,6 +37,8 @@ public class Menu {
 			System.out.println("Input age again");
 		else if(type == 3)
 			System.out.println("Input course id again");
+		else if(type == 4)
+			System.out.println("The student has enrolled, fail to enrol");
 	}
 	
 	public static void displayLogoutMsg() {
