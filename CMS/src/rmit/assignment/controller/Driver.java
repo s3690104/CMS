@@ -68,12 +68,14 @@ public class Driver implements CourseUtil {
 
 	public static void main(String[] args) {
 		initialCourseData();
-		Menu.displayMainMenu();
 		Scanner scanner = new Scanner(System.in);
 		boolean status = true;
+		boolean temp = true;
 		while (status) {
+			Menu.displayMainMenu();
 			try {
 				int menuNum = scanner.nextInt();
+				scanner.nextLine();
 				switch (menuNum) {
 				case 1:
 					addStudent();
@@ -82,10 +84,100 @@ public class Driver implements CourseUtil {
 					System.out.println("======= Withdraw a student =======");
 					break;
 				case 3:
-					displayStudentInCourse(scanner);
+					temp = true;
+					do {
+						System.out.println("========== Display a student list for a course ==========");
+						Menu.displayCourseName();
+						try {
+							String inputNumber = scanner.nextLine();
+							menuNum = Integer.valueOf(inputNumber);
+							if (menuNum <= 0 || menuNum > 6) {
+								Menu.displayErrorMsg(0);
+							} else {
+								if (menuNum <= 0 || menuNum > 6) {
+									Menu.displayErrorMsg(0);
+								} else {
+									if (menuNum == 6) {
+										Menu.displayMainMenu();
+										temp = false;
+									} else {
+										String courseId = String.valueOf("00" + menuNum);
+										String menuFormat = String.format(
+												"============== Students in %s ==============",
+												courseNameMap.get(courseId));
+										System.out.println(menuFormat);
+										Course courses = courseFigureMap.get(courseId);
+										List<Student> students = courses.getStudents();
+										if (students.size() > 0) {
+											for (Student tStudent : students) {
+												System.out.println(tStudent.toString());
+											}
+										} else {
+											System.out.println("No students in this course.");
+										}
+										System.out.println("=========================================================");
+										System.out.println();
+									}
+
+								}
+							}
+						} catch (NumberFormatException e) {
+							Menu.displayErrorMsg(0);
+						}
+					} while (temp);
 					break;
 				case 4:
-					System.out.println("======= Display the course figures =======");
+					System.out.println("=============== Display the course figures ==============");
+					temp = true;
+					do {
+						String displayFormat = "%s: Students %d, Income %.2f, Cost %.2f, Profit %.2f";
+						// String displayFormat = "%s:, Students %d, Income %.2f, Cost %.2f, Profit
+						// %.2f";
+						for (Course course : courseFigureMap.values()) {
+							String courseName = courseNameMap.get(course.getId());
+							List<Student> students = course.getStudents();
+							double income = 0.0;
+							double cost = 0.0;
+							double profit = 0.0;
+							if (students.size() > 0) {
+								for (Student tStudent : students) {
+									income = income + tStudent.getCourseFee();
+									if (course.getId().equals("003")) {
+										cost = 100 * students.size();
+									} else {
+										cost = course.getCost();
+									}
+									profit = income - cost;
+								}
+								System.out.println(String.format(displayFormat, courseName, students.size(), income,
+										cost, profit));
+							} else {
+								System.out.println(String.format("No students in %s course.", courseName));
+							}
+							temp = false;
+						}
+					} while (temp);
+
+					temp = true;
+					do {
+						System.out.println("=========================================================");
+						System.out.println("=\t1. Back to main menu\t\t\t\t=");
+						System.out.println("=========================================================");
+						Menu.displayOptionMsg();
+						try {
+							String inputNumber = scanner.nextLine();
+							menuNum = Integer.valueOf(inputNumber);
+							if (menuNum <= 0 || menuNum > 1) {
+								Menu.displayErrorMsg(0);
+							} else {
+								Menu.displayMainMenu();
+								temp = false;
+							}
+						} catch (NumberFormatException e) {
+							Menu.displayErrorMsg(0);
+						}
+					} while (temp);
+
 					break;
 				case 5:
 					Menu.displayLogoutMsg();
@@ -95,94 +187,43 @@ public class Driver implements CourseUtil {
 					throw new InputMismatchException();
 				}
 			} catch (InputMismatchException e) {
-//				System.out.println("InputMismatchException");
-//				e.printStackTrace();
+				 System.out.println("Input Mismatch Exception");
+				// e.printStackTrace();
 				Menu.displayErrorMsg(0);
+//				Menu.displayOptionMsg();
 				scanner.nextLine();
 			} catch (Exception e) {
-//				System.out.println("Exception");
-//				 e.printStackTrace();
+				 System.out.println("Exception");
+				// e.printStackTrace();
 				Menu.displayErrorMsg(0);
+//				Menu.displayOptionMsg();
 				scanner.nextLine();
 			}
 		}
 
-	}
-
-	private static void displayStudentInCourse(Scanner scanner) {
-		int menuNum;
-		boolean temp = true;
-		do {
-			System.out.println("========== Display a student list for a course ==========");
-			Menu.displayCourseName();
-			menuNum = scanner.nextInt();
-			temp = displayStudentsInCourseDetail(menuNum, temp);
-		}while(temp);
-	}
-
-	private static boolean displayStudentsInCourseDetail(int menuNum, boolean temp) {
-		if(menuNum <=0 || menuNum >6) {
-			Menu.displayErrorMsg(0);
-		}else {
-			if(menuNum == 6) {
-				Menu.displayMainMenu();
-				temp = false;
-			}else {
-				String courseId = String.valueOf("00"+menuNum);
-				String menuFormat = String.format("============== Students in %s ==============", courseNameMap.get(courseId));
-				System.out.println(menuFormat);
-				Course courses = courseFigureMap.get(courseId);
-				List<Student> students = courses.getStudents();
-				if(students.size()>0) {
-					for(Student tStudent : students) {
-						System.out.println(tStudent.toString());
-					}
-				}else {
-					System.out.println("No students in this course.");
-				}
-				System.out.println("=========================================================");
-			}
-			
-		}
-		return temp;
 	}
 
 	private static void addStudent() {
 		System.out.println("===================== Add a student =====================");
 		Scanner scanner = new Scanner(System.in);
 		Student student = new Student();
-		boolean temp = true;
 		String studentName = inputStudentName(scanner, true);
 		student.setStudentName(studentName);
-
-//		temp = true;
 		int age = inputStudentAge(scanner, true);
 		student.setAge(age);
-
-//		temp = true;
 		inputStudentAddress(scanner, student);
-
-//		temp = true;
-		String courseId = registerCourse(scanner, student, true, studentName);
-		
-//		temp = true;
+		registerCourse(scanner, student, true, studentName);
 		continueToAdd(scanner, true);
-		
-		
-
-		// System.out.println("============== Students in
-		// "+courseUtil.getCourseNameMap().get(courseId)+" ==============");
-		// System.out.println(student.toString());
 	}
-	
+
 	private static void continueToAdd(Scanner scanner, boolean temp) {
 		do {
-			System.out.println("Continue to add£¿Yes/No");
+			System.out.println("Continue to add£¿Y/N");
 			String isContinue = scanner.nextLine();
 			if (StringUtil.isEmpty(isContinue)) {
 				Menu.displayErrorMsg(0);
 			} else {
-				if (isContinue.equalsIgnoreCase("Yes")) {
+				if (isContinue.equalsIgnoreCase("Y") || isContinue.equalsIgnoreCase("yes")) {
 					addStudent();
 				} else {
 					Menu.displayMainMenu();
@@ -213,16 +254,16 @@ public class Driver implements CourseUtil {
 					}
 
 					List<Student> students = course.getStudents();
-					int j=0;
-					for(int i=0;i<students.size();i++) {
+					int j = 0;
+					for (int i = 0; i < students.size(); i++) {
 						Student tStudent = students.get(i);
-						if(tStudent.getStudentName().equals(studentName)) {
+						if (tStudent.getStudentName().equals(studentName)) {
 							Menu.displayErrorMsg(4);
 							temp = false;
 							j++;
 						}
 					}
-					if(j == 0) {
+					if (j == 0) {
 						students.add(student);
 						course.setStudents(students);
 						temp = false;
@@ -279,7 +320,7 @@ public class Driver implements CourseUtil {
 				temp = false;
 			}
 		} while (temp);
-		
+
 		return studentName;
 	}
 

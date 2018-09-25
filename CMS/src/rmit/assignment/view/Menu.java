@@ -30,7 +30,7 @@ public class Menu {
 	
 	public static void displayErrorMsg(int type) {
 		if(type == 0)
-			System.out.println("Input wrong information, choose again:");
+			System.out.println("Input wrong information");
 		else if(type == 1)
 			System.out.println("Input student's name again");
 		else if(type == 2)
