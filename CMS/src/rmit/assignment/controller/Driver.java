@@ -187,7 +187,7 @@ public class Driver implements CourseUtil {
 					throw new InputMismatchException();
 				}
 			} catch (InputMismatchException e) {
-				 System.out.println("Input Mismatch Exception");
+				 System.out.println("InputMismatchException");
 				// e.printStackTrace();
 				Menu.displayErrorMsg(0);
 //				Menu.displayOptionMsg();
@@ -225,9 +225,10 @@ public class Driver implements CourseUtil {
 			} else {
 				if (isContinue.equalsIgnoreCase("Y") || isContinue.equalsIgnoreCase("yes")) {
 					addStudent();
-				} else {
-					Menu.displayMainMenu();
-				}
+				} 
+//				else {
+//					Menu.displayMainMenu();
+//				}
 				temp = false;
 			}
 		} while (temp);
