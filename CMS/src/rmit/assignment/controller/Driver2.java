@@ -96,6 +96,11 @@ public class Driver2 implements CourseUtil {
 		Menu.displayCourseName();
 	}
 	
+	/**
+	 * display students from course
+	 * @param scanner
+	 * @return
+	 */
 	private static boolean choseCourse(Scanner scanner) {
 		String tInput = scanner.nextLine();
 		if (StringUtil.isEmpty(tInput)) {
@@ -111,20 +116,8 @@ public class Driver2 implements CourseUtil {
 						return false;
 					} else {
 						String courseId = String.valueOf("00" + menu);
-						String menuFormat = String.format("\tStudents in %s",courseNameMap.get(courseId));
-						System.out.println(menuFormat);
-						Menu.displayCourseFeedback(1);
-						Course courses = courseFigureMap.get(courseId);
-						List<Student> students = courses.getStudents();
-						if (students.size() > 0) {
-							for (Student tStudent : students) {
-								System.out.println(tStudent.toString());
-							}
-							Menu.displayCourseFeedback(1);
-						} else {
-							Menu.displayCourseFeedback(0);
-							Menu.displayCourseFeedback(1);
-						}
+						Course course = courseFigureMap.get(courseId);
+						displayCourseInfo(course, 0);
 					}
 				}
 			} catch (NumberFormatException e) {
@@ -132,6 +125,32 @@ public class Driver2 implements CourseUtil {
 			}
 		}
 		return true;
+	}
+	
+	private static void displayCourseInfo(Course course, int flag) {
+		String courseName = courseNameMap.get(course.getId());
+		List<Student> students = course.getStudents();
+		//
+		if(flag == 0) {
+			//combine display menu
+			String menuFormat = String.format("\tStudents in %s", courseName);
+			System.out.println(menuFormat);
+			Menu.displayCourseFeedback(1);
+			//display students from specific course
+			if (students.size() > 0) {
+				for (Student tStudent : students) {
+					System.out.println(tStudent.toString());
+				}
+				//combine display menu
+				Menu.displayCourseFeedback(1);
+			} else {
+				//no students in the course and combine display menu
+				Menu.displayCourseFeedback(0);
+				Menu.displayCourseFeedback(1);
+			}
+		} else {
+			
+		}
 	}
 
 	private static void displayCourseFigures() {
@@ -227,6 +246,7 @@ public class Driver2 implements CourseUtil {
 			Student tStudent = students.get(i);
 			if (tStudent.getStudentName().equals(student.getStudentName())) {
 				Menu.displayFeedbackMsg(5);
+				j++;
 				break;
 			}
 		}
