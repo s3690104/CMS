@@ -31,23 +31,33 @@ public class Menu {
 	
 	public static void displayFeedbackMsg(int type) {
 		System.out.println("=========================================================");
-		if(type == 0)
-			System.out.println("Input wrong information");
-		else if(type == 1)
-			System.out.println("Input name again");
-		else if(type == 2)
-			System.out.println("Input age again");
-		else if(type == 3)
-			System.out.println("");
-		else if(type == 4)
-			System.out.println("Input course id again");
-		else if(type == 5)
-			System.out.println("The student has enrolled, fail to enrol");
-		else if(type == 6)
-			System.out.println("Wrong information, input again.");
-		else if(type == 7)
-			System.out.println("Continue to add£¿Y/N");
+		switch(type) {
+		case 0:
+			System.out.println("Input wrong information"); break;
+		case 1:
+			System.out.println("Input name again"); break;
+		case 2:
+			System.out.println("Input age again"); break;
+		case 4:
+			System.out.println("Input course id again"); break;
+		case 5:
+			System.out.println("The student has enrolled, fail to enrol"); break;
+		case 6:
+			System.out.println("Wrong information, input again."); break;
+		case 7:
+			System.out.println("Continue to add£¿Y/N"); break;
+		default: System.out.println("");
+		}
 		System.out.println("=========================================================");
+		System.out.println();
+	}
+	
+	public static void displayCourseFeedback(int type) {
+		switch(type) {
+			case 0: System.out.println("No students in this course"); break;
+			case 1: System.out.println("========================================================"); break;
+			case 2: System.out.println(); break;
+		}
 		System.out.println();
 	}
 	

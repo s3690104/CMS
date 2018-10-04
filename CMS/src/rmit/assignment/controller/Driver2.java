@@ -32,13 +32,13 @@ public class Driver2 implements CourseUtil {
 				if (menu <= 0 || menu > 6) {
 					throw new NumberFormatException();
 				} else {
-					// display sub-function
-					displaySubTitle(menu);
-					// enter into specific function
 					switch (menu) {
 					case 1:
 						boolean continueToAdd = false;
 						do{
+							// display sub-function
+							displaySubTitle(menu);
+							// enter into specific function
 							addStudent(scanner);
 							continueToAdd = continueToAdd(scanner);
 						}while(continueToAdd);
@@ -47,7 +47,12 @@ public class Driver2 implements CourseUtil {
 						withdrawStudent();
 						break;
 					case 3:
-						displayStudentInCourse();
+						boolean continueToChose = false;
+						do{
+							displaySubTitle(menu);
+							displayStudentInCourse();
+							continueToChose = choseCourse(scanner);
+						}while(continueToChose);
 						break;
 					case 4:
 						displayCourseFigures();
@@ -88,7 +93,45 @@ public class Driver2 implements CourseUtil {
 	}
 
 	private static void displayStudentInCourse() {
-
+		Menu.displayCourseName();
+	}
+	
+	private static boolean choseCourse(Scanner scanner) {
+		String tInput = scanner.nextLine();
+		if (StringUtil.isEmpty(tInput)) {
+			Menu.displayFeedbackMsg(6);
+		} else {
+			try {
+				int menu = Integer.valueOf(tInput);
+				// validate menu number
+				if (menu <= 0 || menu > 6) {
+					throw new NumberFormatException();
+				} else {
+					if (menu == 6) {
+						return false;
+					} else {
+						String courseId = String.valueOf("00" + menu);
+						String menuFormat = String.format("\tStudents in %s",courseNameMap.get(courseId));
+						System.out.println(menuFormat);
+						Menu.displayCourseFeedback(1);
+						Course courses = courseFigureMap.get(courseId);
+						List<Student> students = courses.getStudents();
+						if (students.size() > 0) {
+							for (Student tStudent : students) {
+								System.out.println(tStudent.toString());
+							}
+							Menu.displayCourseFeedback(1);
+						} else {
+							Menu.displayCourseFeedback(0);
+							Menu.displayCourseFeedback(1);
+						}
+					}
+				}
+			} catch (NumberFormatException e) {
+				Menu.displayFeedbackMsg(6);
+			}
+		}
+		return true;
 	}
 
 	private static void displayCourseFigures() {
@@ -213,6 +256,7 @@ public class Driver2 implements CourseUtil {
 		String isContinue = scanner.nextLine();
 		if (StringUtil.isEmpty(isContinue)) {
 			Menu.displayFeedbackMsg(6);
+			continueToAdd(scanner);
 		} else {
 			if (isContinue.equalsIgnoreCase("Y") || isContinue.equalsIgnoreCase("yes")) {
 				return true;
