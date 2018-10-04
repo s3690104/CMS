@@ -55,7 +55,12 @@ public class Driver2 implements CourseUtil {
 						}while(continueToChose);
 						break;
 					case 4:
-						displayCourseFigures();
+						boolean continueToDisplayCourseFigures = false;
+						do{
+							displaySubTitle(menu);
+							displayCourseFigures();
+							continueToDisplayCourseFigures = continueToDisplayCourseFigures(scanner);
+						}while(continueToDisplayCourseFigures);
 						break;
 					case 5:
 						changeCourseFee();
@@ -72,6 +77,10 @@ public class Driver2 implements CourseUtil {
 		}
 	}
 
+	/**
+	 * add student
+	 * @param scanner
+	 */
 	private static void addStudent(Scanner scanner) {
 		Student student = new Student();
 		// get and set student's name
@@ -127,6 +136,37 @@ public class Driver2 implements CourseUtil {
 		return true;
 	}
 	
+	/**
+	 * menu of continue to display course figures
+	 * @param scanner
+	 * @return
+	 */
+	private static boolean continueToDisplayCourseFigures(Scanner scanner) {
+		Menu.displayCourseFeedback(3,"");
+		String tInput = scanner.nextLine();
+		try {
+			if (StringUtil.isEmpty(tInput)) {
+				throw new NumberFormatException();
+			} else {
+				int menu = Integer.valueOf(tInput);
+				// validate menu number
+				if (menu <= 0 || menu > 1) {
+					throw new NumberFormatException();
+				}else
+					return true;
+			}
+		} catch (NumberFormatException e) {
+			Menu.displayFeedbackMsg(6);
+			continueToDisplayCourseFigures(scanner);
+		}
+		return false;
+	}
+	
+	/**
+	 * display student in specific course and course figures 
+	 * @param course
+	 * @param flag 1-display student 2-set and display course figures
+	 */
 	private static void displayCourseInfo(Course course, int flag) {
 		String courseName = courseNameMap.get(course.getId());
 		List<Student> students = course.getStudents();
@@ -135,26 +175,61 @@ public class Driver2 implements CourseUtil {
 			//combine display menu
 			String menuFormat = String.format("\tStudents in %s", courseName);
 			System.out.println(menuFormat);
-			Menu.displayCourseFeedback(1);
+			Menu.displayCourseFeedback(1,"");
 			//display students from specific course
 			if (students.size() > 0) {
 				for (Student tStudent : students) {
 					System.out.println(tStudent.toString());
 				}
 				//combine display menu
-				Menu.displayCourseFeedback(1);
+				Menu.displayCourseFeedback(1,"");
 			} else {
 				//no students in the course and combine display menu
-				Menu.displayCourseFeedback(0);
-				Menu.displayCourseFeedback(1);
+				noStudents(courseName);
 			}
 		} else {
-			
+			String displayFormat = "%s: Students %d, Income %.2f, Cost %.2f, Profit %.2f";
+			double income = 0.0;
+			double cost = 0.0;
+			double profit = 0.0;
+			if (students.size() > 0) {
+				for (Student tStudent : students) {
+					//set course figures
+					income = income + tStudent.getCourseFee();
+					if (course.getId().equals("003")) {
+						cost = 100 * students.size();
+					} else {
+						cost = course.getCost();
+					}
+					profit = income - cost;
+				}
+				System.out.println(String.format(displayFormat, courseName, students.size(), income,cost, profit));
+				Menu.displayCourseFeedback(-1, "");
+			} else {
+				//no students in the course and combine display menu
+				Menu.displayCourseFeedback(0, courseName);
+			}
 		}
 	}
+	
+	/**
+	 * no students in current course
+	 * @param courseName
+	 */
+	private static void noStudents(String courseName) {
+		Menu.displayCourseFeedback(0, courseName);
+		Menu.displayCourseFeedback(1,"");
+	}
 
+	/**
+	 * display course figures
+	 */
 	private static void displayCourseFigures() {
-
+		System.out.println();
+		for (Course course : courseFigureMap.values()) {
+			displayCourseInfo(course, 1);
+		}
+		Menu.displayCourseFeedback(1,"");
 	}
 
 	private static void changeCourseFee() {

@@ -52,11 +52,14 @@ public class Menu {
 		System.out.println();
 	}
 	
-	public static void displayCourseFeedback(int type) {
+	public static void displayCourseFeedback(int type, String courseName) {
 		switch(type) {
-			case 0: System.out.println("No students in this course"); break;
-			case 1: System.out.println("========================================================"); break;
+			case 0: 
+				String msg = "No students in %s course";
+				System.out.println(String.format(msg, courseName)); break;
+			case 1: System.out.println("========================================================="); break;
 			case 2: System.out.println(); break;
+			case 3:	System.out.println("=\t1. Back to main menu\t\t\t\t="); break;
 		}
 		System.out.println();
 	}
