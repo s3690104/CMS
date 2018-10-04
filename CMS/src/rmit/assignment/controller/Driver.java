@@ -81,7 +81,22 @@ public class Driver implements CourseUtil {
 					addStudent();
 					break;
 				case 2:
-					System.out.println("======= Withdraw a student =======");
+					temp = true;
+					do {
+						System.out.println("======= Withdraw a student =======");
+						Menu.displayCourseName();
+						try {
+							String inputNumber = scanner.nextLine();
+							menuNum = Integer.valueOf(inputNumber);
+							if (menuNum <= 0 || menuNum > 6) {
+								Menu.displayFeedbackMsg(0);
+							} else {
+								
+							}
+						}catch(NumberFormatException e) {
+							Menu.displayFeedbackMsg(0);
+						}
+					}while(temp);
 					break;
 				case 3:
 					temp = true;
@@ -92,13 +107,13 @@ public class Driver implements CourseUtil {
 							String inputNumber = scanner.nextLine();
 							menuNum = Integer.valueOf(inputNumber);
 							if (menuNum <= 0 || menuNum > 6) {
-								Menu.displayErrorMsg(0);
+								Menu.displayFeedbackMsg(0);
 							} else {
 								if (menuNum <= 0 || menuNum > 6) {
-									Menu.displayErrorMsg(0);
+									Menu.displayFeedbackMsg(0);
 								} else {
 									if (menuNum == 6) {
-										Menu.displayMainMenu();
+//										Menu.displayMainMenu();
 										temp = false;
 									} else {
 										String courseId = String.valueOf("00" + menuNum);
@@ -122,7 +137,7 @@ public class Driver implements CourseUtil {
 								}
 							}
 						} catch (NumberFormatException e) {
-							Menu.displayErrorMsg(0);
+							Menu.displayFeedbackMsg(0);
 						}
 					} while (temp);
 					break;
@@ -168,18 +183,21 @@ public class Driver implements CourseUtil {
 							String inputNumber = scanner.nextLine();
 							menuNum = Integer.valueOf(inputNumber);
 							if (menuNum <= 0 || menuNum > 1) {
-								Menu.displayErrorMsg(0);
+								Menu.displayFeedbackMsg(0);
 							} else {
-								Menu.displayMainMenu();
+//								Menu.displayMainMenu();
 								temp = false;
 							}
 						} catch (NumberFormatException e) {
-							Menu.displayErrorMsg(0);
+							Menu.displayFeedbackMsg(0);
 						}
 					} while (temp);
 
 					break;
-				case 5:
+				case 5:	
+						System.out.println("======= Change course fee =======");
+						break;
+				case 6:
 					Menu.displayLogoutMsg();
 					status = false;
 					break;
@@ -189,13 +207,13 @@ public class Driver implements CourseUtil {
 			} catch (InputMismatchException e) {
 				 System.out.println("InputMismatchException");
 				// e.printStackTrace();
-				Menu.displayErrorMsg(0);
+				Menu.displayFeedbackMsg(0);
 //				Menu.displayOptionMsg();
 				scanner.nextLine();
 			} catch (Exception e) {
 				 System.out.println("Exception");
 				// e.printStackTrace();
-				Menu.displayErrorMsg(0);
+				Menu.displayFeedbackMsg(0);
 //				Menu.displayOptionMsg();
 				scanner.nextLine();
 			}
@@ -221,7 +239,7 @@ public class Driver implements CourseUtil {
 			System.out.println("Continue to add£¿Y/N");
 			String isContinue = scanner.nextLine();
 			if (StringUtil.isEmpty(isContinue)) {
-				Menu.displayErrorMsg(0);
+				Menu.displayFeedbackMsg(0);
 			} else {
 				if (isContinue.equalsIgnoreCase("Y") || isContinue.equalsIgnoreCase("yes")) {
 					addStudent();
@@ -240,10 +258,10 @@ public class Driver implements CourseUtil {
 			System.out.println("= Course ID:\t");
 			courseId = scanner.nextLine();
 			if (StringUtil.isEmpty(courseId)) {
-				Menu.displayErrorMsg(3);
+				Menu.displayFeedbackMsg(3);
 			} else {
 				if (!courseNameMap.containsKey(courseId))
-					Menu.displayErrorMsg(3);
+					Menu.displayFeedbackMsg(3);
 				else {
 					Course course = courseFigureMap.get(courseId);
 					if (enrolMap.containsKey(student.getStudentName())) {
@@ -259,7 +277,7 @@ public class Driver implements CourseUtil {
 					for (int i = 0; i < students.size(); i++) {
 						Student tStudent = students.get(i);
 						if (tStudent.getStudentName().equals(studentName)) {
-							Menu.displayErrorMsg(4);
+							Menu.displayFeedbackMsg(4);
 							temp = false;
 							j++;
 						}
@@ -293,17 +311,17 @@ public class Driver implements CourseUtil {
 			System.out.println("= Age:\t");
 			String tAge = scanner.nextLine();
 			if (StringUtil.isEmpty(tAge)) {
-				Menu.displayErrorMsg(2);
+				Menu.displayFeedbackMsg(2);
 			} else {
 				try {
 					age = Integer.valueOf(tAge);
 					if (age < 1) {
-						Menu.displayErrorMsg(2);
+						Menu.displayFeedbackMsg(2);
 					} else {
 						temp = false;
 					}
 				} catch (NumberFormatException e) {
-					Menu.displayErrorMsg(2);
+					Menu.displayFeedbackMsg(2);
 				}
 			}
 		} while (temp);
@@ -316,7 +334,7 @@ public class Driver implements CourseUtil {
 			System.out.println("= Name:\t");
 			studentName = scanner.nextLine();
 			if (StringUtil.isEmpty(studentName)) {
-				Menu.displayErrorMsg(1);
+				Menu.displayFeedbackMsg(1);
 			} else {
 				temp = false;
 			}
