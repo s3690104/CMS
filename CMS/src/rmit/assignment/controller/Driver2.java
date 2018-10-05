@@ -1,6 +1,6 @@
 package rmit.assignment.controller;
 
-import java.util.ArrayList; 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +44,10 @@ public class Driver2 implements CourseUtil {
 						}while(continueToAdd);
 						break;
 					case 2:
-						withdrawStudent();
+						boolean continueToWithdraw = false;
+						do{
+							continueToWithdraw = withdrawStudent(scanner);
+						}while(continueToWithdraw);
 						break;
 					case 3:
 						boolean continueToChose = false;
@@ -97,8 +100,65 @@ public class Driver2 implements CourseUtil {
 		enrollStudent(student, courseId);
 	}
 
-	private static void withdrawStudent() {
-
+	private static boolean withdrawStudent(Scanner scanner) {
+		displaySubTitle(2);
+		//display all courses
+		Menu.displayCourseName();
+		String tInput = scanner.nextLine();
+		if (StringUtil.isEmpty(tInput)) {
+			Menu.displayFeedbackMsg(6);
+		} else {
+			try {
+				int menu = Integer.valueOf(tInput);
+				// validate menu number
+				if (menu <= 0 || menu > 6) {
+					throw new NumberFormatException();
+				} else {
+					if (menu == 6) {
+						return false;
+					} else {
+						String courseId = String.valueOf("00" + menu);
+						Course course = courseFigureMap.get(courseId);
+						List<Student> students = displayCourseInfo(course, 0);
+						if(students!=null && students.size()>0) {
+							Menu.displayCourseFeedback(4, "");
+							String inputStudentName = scanner.nextLine();
+							if(StringUtil.isEmpty(inputStudentName))
+								throw new NumberFormatException();
+							else {
+								int matched = 0;
+								for(int i=0;i<students.size();i++) {
+									if(inputStudentName.equals(students.get(i).getStudentName())) {
+										if (enrolMap.containsKey(students.get(i).getStudentName())) {
+											int enroledTimes = enrolMap.get(students.get(i).getStudentName());
+											if(enroledTimes == 1)
+												enrolMap.remove(students.get(i).getStudentName());
+											else if(enroledTimes > 1) {
+												enroledTimes--;
+												enrolMap.replace(students.get(i).getStudentName(), enroledTimes);
+											}
+											else 
+												enrolMap.remove(students.get(i).getStudentName());
+										}
+										matched++;
+										System.out.println(String.format("Student: %s has been successfully removed", students.get(i).getStudentName()));
+										System.out.println();
+										students.remove(i);
+										break;
+									}
+								}
+								if(matched == 0)
+									Menu.displayCourseFeedback(5,"");
+							}
+						}
+					}
+				}
+			} catch (NumberFormatException e) {
+				Menu.displayFeedbackMsg(6);
+				return true;
+			}
+		}
+		return true;
 	}
 
 	private static void displayStudentInCourse() {
@@ -153,13 +213,13 @@ public class Driver2 implements CourseUtil {
 				if (menu <= 0 || menu > 1) {
 					throw new NumberFormatException();
 				}else
-					return true;
+					return false;
 			}
 		} catch (NumberFormatException e) {
 			Menu.displayFeedbackMsg(6);
-			continueToDisplayCourseFigures(scanner);
+			return true;
 		}
-		return false;
+		
 	}
 	
 	/**
@@ -167,7 +227,7 @@ public class Driver2 implements CourseUtil {
 	 * @param course
 	 * @param flag 1-display student 2-set and display course figures
 	 */
-	private static void displayCourseInfo(Course course, int flag) {
+	private static List<Student> displayCourseInfo(Course course, int flag) {
 		String courseName = courseNameMap.get(course.getId());
 		List<Student> students = course.getStudents();
 		//
@@ -210,6 +270,8 @@ public class Driver2 implements CourseUtil {
 				Menu.displayCourseFeedback(0, courseName);
 			}
 		}
+		
+		return students;
 	}
 	
 	/**
@@ -332,7 +394,7 @@ public class Driver2 implements CourseUtil {
 			//the student get discount since he has enrolled before
 			if (enrolMap.containsKey(student.getStudentName())) {
 				student.setCourseFee(course.getCharge() * DISCOUNT);
-				enrolMap.put(student.getStudentName(), enrolMap.get(student.getStudentName() + 1));
+				enrolMap.put(student.getStudentName(), enrolMap.get(student.getStudentName())+ 1);
 			} else {
 				//the student enrolled first time
 				student.setCourseFee(course.getCharge());

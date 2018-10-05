@@ -60,6 +60,8 @@ public class Menu {
 			case 1: System.out.println("========================================================="); break;
 			case 2: System.out.println(); break;
 			case 3:	System.out.println("=\t1. Back to main menu\t\t\t\t="); break;
+			case 4: System.out.println("Enter a student name: \t"); break;
+			case 5: System.out.println("=================== No matched student =================="); break;
 		}
 		System.out.println();
 	}
@@ -73,7 +75,7 @@ public class Menu {
 		case 1:
 			System.out.println("===================== Add a student ====================="); break;
 		case 2:
-			System.out.println("===================== Withdraw a student ================"); break;
+			System.out.println("========= Withdraw a student from below list ============"); break;
 		case 3:
 			System.out.println("========== Display a student list for a course =========="); break;
 		case 4:
