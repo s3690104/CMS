@@ -66,7 +66,12 @@ public class Driver2 implements CourseUtil {
 						}while(continueToDisplayCourseFigures);
 						break;
 					case 5:
-						changeCourseFee();
+						boolean continueTochangeCourseFee = false;
+						do{
+							displaySubTitle(menu);
+							displayStudentInCourse();
+							continueTochangeCourseFee = changeCourseFee(scanner);
+						}while(continueTochangeCourseFee);
 						break;
 					case 6:
 						status = logout();
@@ -294,8 +299,47 @@ public class Driver2 implements CourseUtil {
 		Menu.displayCourseFeedback(1,"");
 	}
 
-	private static void changeCourseFee() {
-
+	private static boolean changeCourseFee(Scanner scanner) {
+		String tInput = scanner.nextLine();
+		if (StringUtil.isEmpty(tInput)) {
+			Menu.displayFeedbackMsg(6);
+		} else {
+			try {
+				int menu = Integer.valueOf(tInput);
+				// validate menu number
+				if (menu <= 0 || menu > 6) {
+					throw new NumberFormatException();
+				} else {
+					if (menu == 6) {
+						return false;
+					} else {
+						String courseId = String.valueOf("00" + menu);
+						Course courses = courseFigureMap.get(courseId);
+						String msgFormat = "Current course fee for %s is %.2f";
+						System.out.println(String.format(msgFormat, courseNameMap.get(courseId), courses.getCharge()));
+						Menu.displayCourseFeedback(7,"");
+						tInput = scanner.nextLine();
+						if (StringUtil.isEmpty(tInput)) {
+							throw new NumberFormatException();
+						}else {
+							try {
+								double fee = Double.valueOf(tInput);
+								courses.setCharge(fee);
+								msgFormat = "%s course fee has successfully change to %.2f";
+								System.out.println(String.format(msgFormat, courseNameMap.get(courseId), fee));
+								System.out.println();
+							} catch (NumberFormatException e) {
+								throw new NumberFormatException();
+							}
+						}
+					}
+				}
+			} catch (NumberFormatException e) {
+				Menu.displayFeedbackMsg(6);
+				return true;
+			}
+		}
+		return true;
 	}
 
 	private static void displaySubTitle(int menuNumber) {

@@ -62,6 +62,7 @@ public class Menu {
 			case 3:	System.out.println("=\t1. Back to main menu\t\t\t\t="); break;
 			case 4: System.out.println("Enter a student name: \t"); break;
 			case 5: System.out.println("=================== No matched student =================="); break;
+			case 7: System.out.println("Change course fee to:  "); break;
 		}
 		System.out.println();
 	}
